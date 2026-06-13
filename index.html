@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>할 일 관리 (Todo)</title>
+    <link rel="stylesheet" href="./src/style.css">
+</head>
+<body>
+    <header>
+        <h1>할 일 목록</h1>
+        <button id="logout-btn">로그아웃</button>
+    </header>
+    
+    <main>
+        <div class="todo-input-section">
+            <input type="text" id="todo-input" placeholder="새로운 할 일을 입력하세요">
+            <button id="add-todo-btn">추가</button>
+        </div>
+        
+        <ul id="todo-list">
+            <!-- 할 일 항목들이 여기에 추가됩니다 -->
+        </ul>
+    </main>
+
+    <script type="module" src="./src/firebase/config.js"></script>
+    <script type="module" src="./src/todo/todo.js"></script>
+</body>
+</html>
