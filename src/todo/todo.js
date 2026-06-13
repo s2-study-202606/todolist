@@ -1,6 +1,6 @@
 import { auth, db } from '../firebase/config.js';
 import { onAuthStateChanged, signOut } from "firebase/auth";
-import { collection, addDoc, onSnapshot, query, orderBy, deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { collection, addDoc, onSnapshot, query, orderBy, deleteDoc, doc } from "firebase/firestore";
 
 document.addEventListener('DOMContentLoaded', () => {
     const logoutBtn = document.getElementById('logout-btn');
@@ -9,28 +9,44 @@ document.addEventListener('DOMContentLoaded', () => {
     const todoList = document.getElementById('todo-list');
     
     let currentUser = null;
+    
+    // 로컬 스토리지에서 교사 여부 확인
+    const isTeacher = localStorage.getItem('isTeacher') === 'true';
 
-    // 인증 상태 감지
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            currentUser = user;
-            loadTodos(); // 로그인된 경우 할 일 목록 불러오기
-        } else {
-            // 로그인되어 있지 않으면 로그인 페이지로 이동
-            if (window.location.pathname !== '/login.html') {
-                window.location.href = '/login.html';
+    if (isTeacher) {
+        // 교사 로그인 우회 처리 (가짜 고유 ID 부여)
+        currentUser = { uid: 'teacher-admin-uid-1234' };
+        loadTodos();
+    } else {
+        // 학생(일반 Firebase 유저) 인증 상태 감지
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                loadTodos(); 
+            } else {
+                // 로그인되어 있지 않으면 로그인 페이지로 이동
+                if (window.location.pathname !== '/login.html') {
+                    window.location.href = '/login.html';
+                }
             }
-        }
-    });
+        });
+    }
 
     // 로그아웃 로직
     if (logoutBtn) {
         logoutBtn.addEventListener('click', async () => {
-            try {
-                await signOut(auth);
+            if (isTeacher) {
+                // 교사 로그아웃 시 로컬 스토리지 데이터만 삭제
+                localStorage.removeItem('isTeacher');
                 window.location.href = '/login.html';
-            } catch (error) {
-                console.error("로그아웃 실패:", error);
+            } else {
+                // 학생 로그아웃 (Firebase)
+                try {
+                    await signOut(auth);
+                    window.location.href = '/login.html';
+                } catch (error) {
+                    console.error("로그아웃 실패:", error);
+                }
             }
         });
     }
@@ -80,6 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 todoInput.value = ''; // 입력창 초기화
             } catch (error) {
                 console.error("추가 실패:", error);
+                alert("할 일 추가 중 오류가 발생했습니다. (Firebase 보안 규칙을 확인하세요)");
             }
         });
     }
