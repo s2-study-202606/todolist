@@ -10,6 +10,23 @@ document.addEventListener('DOMContentLoaded', () => {
     
     let currentUser = null;
     
+    // 윤리 가이드 게이트 로직
+    const ethicsOverlay = document.getElementById('ethics-overlay');
+    const ethicsAgreeBtn = document.getElementById('ethics-agree-btn');
+    
+    if (ethicsOverlay && ethicsAgreeBtn) {
+        const hasAgreed = localStorage.getItem('ethicsAgreed') === 'true';
+        if (!hasAgreed) {
+            // 아직 동의하지 않았다면 오버레이 표시
+            ethicsOverlay.classList.remove('hidden');
+        }
+
+        ethicsAgreeBtn.addEventListener('click', () => {
+            // 버튼 클릭 시 로컬 스토리지에 동의 여부 저장 및 모달 숨김
+            localStorage.setItem('ethicsAgreed', 'true');
+            ethicsOverlay.classList.add('hidden');
+        });
+    }
     // 로컬 스토리지에서 교사 여부 확인
     const isTeacher = localStorage.getItem('isTeacher') === 'true';
 
