@@ -31,8 +31,24 @@
         </div>
     </div>
 
+    <!-- 공통 모달 오버레이 (푸터 약관용) -->
+    <div id="footer-modal-overlay" class="footer-modal-overlay hidden">
+        <div class="footer-modal">
+            <button id="close-footer-modal" class="close-modal-btn">X</button>
+            <iframe id="footer-modal-iframe" src="" frameborder="0"></iframe>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2026 권권권. All rights reserved. | <a href="#" id="btn-terms">이용약관</a> | <a href="#" id="btn-privacy">개인정보처리방침</a></p>
+            <p>개인정보책임자: 권권권 교사 (잠실중학교) | 문의: 02-123-1234, test@tech.com</p>
+        </div>
+    </footer>
+
     <script type="module" src="./src/firebase/config.js"></script>
     <script type="module" src="./src/auth/login.js"></script>
     <script type="module" src="./src/auth/signup.js"></script>
+    <script type="module" src="./src/todo/footer.js"></script>
 </body>
 </html>
